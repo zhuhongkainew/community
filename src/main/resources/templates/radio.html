@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<head>
+  <title>radio</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <script src="../static/js/jquery-3.4.1.min.js"></script>
+</head>
+<body>
+
+<form class="form-horizontal" action="/task">
+<div class="panel panel-default">
+  <div class="panel-heading">任务列表</div>
+  <table class="table">
+    <tr>
+      <td>单选框</td>
+      <td>任务编码</td>
+      <td>任务名称</td>
+      <td>任务频次</td>
+    </tr>
+    <tr>
+      <td><label class="radio-inline">
+        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 1
+      </label>
+      </td>
+      <td >B001</td>
+      <td>代理人五要素邮件</td>
+      <td>*/40 * * * * ?</td>
+    </tr>
+  </table>
+  <button type="submit" class="btn btn-default">提交</button>
+</div>
+</form>
+</body>
+</html>

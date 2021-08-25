@@ -9,5 +9,9 @@ public class IndexController {
     public String hello() {
         return "index";
     }
+    @GetMapping("/radio")
+    public  String radio(){
+       return "radio";
+    }
 }
 
