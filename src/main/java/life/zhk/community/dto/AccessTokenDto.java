@@ -4,7 +4,7 @@ public class AccessTokenDto {
     private String client_id;
     private String redirect_uri;
     private String code;
-    private String scope;
+    private String client_secret;
     private String state;
 
     public String getClient_id() {
@@ -31,12 +31,12 @@ public class AccessTokenDto {
         this.code = code;
     }
 
-    public String getScope() {
-        return scope;
+    public String getClient_secret() {
+        return client_secret;
     }
 
-    public void setScope(String scope) {
-        this.scope = scope;
+    public void setClient_secret(String client_secret) {
+        this.client_secret = client_secret;
     }
 
     public String getState() {
