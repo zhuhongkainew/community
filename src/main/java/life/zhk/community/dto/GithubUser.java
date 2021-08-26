@@ -9,6 +9,16 @@ public class GithubUser {
         return name;
     }
 
+    @Override
+    public String toString() {
+        return "GithubUser{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", bio='" + bio + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                '}';
+    }
+
     public void setName(String name) {
         this.name = name;
     }
