@@ -13,14 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 public class IndexController {
     @Autowired
     private UserMapper userMapper;
-    @GetMapping("/")
+    @GetMapping("/index")
     public String hello(HttpServletRequest request) {
+
         Cookie[] cookies = request.getCookies();
         if(cookies!=null){
         for (Cookie cookie : cookies) {
             if("token".equals(cookie.getName())){
                 String token = cookie.getValue();
-              User user= userMapper.findByToken(token);
+                User user= userMapper.findByToken(token);
               if(user!=null){
                   request.getSession().setAttribute("user",user);
               }
@@ -33,6 +34,10 @@ public class IndexController {
     @GetMapping("/radio")
     public  String radio(){
        return "radio";
+    }
+    @GetMapping("/")
+    public  String login(){
+        return "login";
     }
 }
 
