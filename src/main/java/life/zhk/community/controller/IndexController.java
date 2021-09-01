@@ -13,6 +13,7 @@ public class IndexController {
     private UserMapper userMapper;
     @GetMapping("/index")
     public String hello(HttpServletRequest request) {
+
         return "index";
     }
     @GetMapping("/radio")
@@ -22,6 +23,11 @@ public class IndexController {
     @GetMapping("/")
     public  String login(){
         return "login";
+    }
+
+    @GetMapping("/gopublish")
+    public  String goPublish(){
+        return "publish";
     }
 }
 
