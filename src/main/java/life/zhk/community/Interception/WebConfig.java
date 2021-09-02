@@ -13,7 +13,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //registry.addInterceptor(new LocaleInterceptor());
-        registry.addInterceptor(sessionInterceptor).addPathPatterns("/");
+        System.out.println("测试重启");
+        registry.addInterceptor(sessionInterceptor).addPathPatterns("/**");
                 //.excludePathPatterns("/");
                 //.excludePathPatterns("/admin/**");
        // registry.addInterceptor(new SecurityInterceptor()).addPathPatterns("/secure/*");
