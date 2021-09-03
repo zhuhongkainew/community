@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginController {
     @Autowired
     private UserMapper userMapper;
+
     @GetMapping("/login")
     public String login() {
         return "login";
@@ -27,13 +28,13 @@ public class LoginController {
                        HttpServletResponse response
 
     ) {
-       User user= userMapper.findById(name);
-       if(user !=null){
-           response.addCookie(new Cookie("token",user.getToken()));
-           return "redirect:/index";
-       }else {
-           return "redirect:/";
-       }
+        User user = userMapper.findById(Integer.parseInt(name));
+        if (user != null) {
+            response.addCookie(new Cookie("token", user.getToken()));
+            return "redirect:/index";
+        } else {
+            return "redirect:/";
+        }
 
     }
 }
