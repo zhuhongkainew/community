@@ -2,3 +2,15 @@
     width: 38px;
     height: 38px;
 }
+.profile .section {
+    margin-top: 50px;
+}
+.main {
+    background-color: white;
+    margin: 30px;
+}
+body {
+    /*background-color: #efefef;*/
+    background-color:grey;
+
+}

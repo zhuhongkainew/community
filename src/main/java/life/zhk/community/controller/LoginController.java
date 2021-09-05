@@ -28,7 +28,9 @@ public class LoginController {
                        HttpServletResponse response
 
     ) {
-        User user = userMapper.findById(Integer.parseInt(name));
+        //User user = userMapper.findById(Integer.parseInt(name));
+        User user = userMapper.selectByPrimaryKey(Integer.parseInt(name));
+
         if (user != null) {
             response.addCookie(new Cookie("token", user.getToken()));
             return "redirect:/index";

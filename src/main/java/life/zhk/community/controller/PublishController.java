@@ -45,7 +45,9 @@ public class PublishController {
         question.setGmtModified(question.getGmtCreate());
         User user= (User) request.getSession().getAttribute("user");
         question.setCreator(user.getId());
-        questionMapper.createPublish(question);
+        //questionMapper.createPublish(question);
+        questionMapper.insert(question);
+
         return "publish";
     }
 }
