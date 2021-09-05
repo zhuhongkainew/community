@@ -41,6 +41,9 @@ public class PublishController {
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
+        question.setViewCount(0);
+        question.setLikeCount(0);
+        question.setCommentCount(0);
         question.setGmtCreate(System.currentTimeMillis());
         question.setGmtModified(question.getGmtCreate());
         User user= (User) request.getSession().getAttribute("user");
