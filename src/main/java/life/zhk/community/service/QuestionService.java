@@ -22,11 +22,11 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
 
-    public PaginationDto getPaginationList(Integer page,Integer size) {
+    public PaginationDto getPaginationList(Integer page, Integer size) {
         PaginationDto paginationDto = new PaginationDto();
         Integer totalCount;
         Integer totalPage;
-        totalCount = (int)questionMapper.countByExample(new QuestionExample());
+        totalCount = (int) questionMapper.countByExample(new QuestionExample());
         if (totalCount / size == 0) {
             totalPage = totalCount / size;
 
@@ -44,7 +44,7 @@ public class QuestionService {
         //List<Question> questionList = questionMapper.getQuestList(offset, size);
 
         QuestionExample example = new QuestionExample();
-        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(example,new RowBounds(offset,size));
+        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
         List<QuestionDto> questionDtoList = new ArrayList<>();
         for (Question question : questionList) {
             QuestionDto questionDto = new QuestionDto();
@@ -64,7 +64,7 @@ public class QuestionService {
         //totalCount = questionMapper.getQuestionCountById(id);
         QuestionExample example = new QuestionExample();
         example.createCriteria().andCreatorEqualTo(id);
-        totalCount = (int)questionMapper.countByExample(example);
+        totalCount = (int) questionMapper.countByExample(example);
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -82,7 +82,7 @@ public class QuestionService {
         Integer offset = (page - 1) * size;
         QuestionExample example1 = new QuestionExample();
         example1.createCriteria().andCreatorEqualTo(id);
-        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(example1,new RowBounds(offset,size));
+        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(example1, new RowBounds(offset, size));
         List<QuestionDto> questionDtoList = new ArrayList<>();
         for (Question question : questionList) {
             QuestionDto questionDto = new QuestionDto();
@@ -97,11 +97,32 @@ public class QuestionService {
     }
 
     public QuestionDto getQuestionById(Integer id) {
-        Question question=questionMapper.selectByPrimaryKey(id);
-        User user =userMapper.selectByPrimaryKey(question.getCreator());
-        QuestionDto questionDto =new QuestionDto();
-        BeanUtils.copyProperties(question,questionDto);
+        Question question = questionMapper.selectByPrimaryKey(id);
+        User user = userMapper.selectByPrimaryKey(question.getCreator());
+        QuestionDto questionDto = new QuestionDto();
+        BeanUtils.copyProperties(question, questionDto);
         questionDto.setUser(user);
         return questionDto;
+    }
+
+    public void createdOrUpdateQuestion(Question question) {
+        if (question.getId() == null) {
+
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
+            questionMapper.insert(question);
+        } else {
+            question.setGmtModified(System.currentTimeMillis());
+            Question questionUpdate = new Question();
+            questionUpdate.setDescription(question.getDescription());
+            questionUpdate.setTag(question.getTag());
+            questionUpdate.setTitle(question.getTitle());
+            QuestionExample example = new QuestionExample();
+            example.createCriteria().andIdEqualTo(question.getId());
+            questionMapper.updateByExampleSelective(questionUpdate, example);
+        }
     }
 }
