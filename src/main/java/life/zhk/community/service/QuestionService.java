@@ -2,6 +2,8 @@ package life.zhk.community.service;
 
 import life.zhk.community.dto.PaginationDto;
 import life.zhk.community.dto.QuestionDto;
+import life.zhk.community.exception.CustomizeException;
+import life.zhk.community.exception.ExceptionEnum;
 import life.zhk.community.mapper.QuestionMapper;
 import life.zhk.community.mapper.UserMapper;
 import life.zhk.community.model.Question;
@@ -98,6 +100,9 @@ public class QuestionService {
 
     public QuestionDto getQuestionById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if(question==null){
+          throw new CustomizeException(ExceptionEnum.QUESTION_NOT_FOUND.getCode(),ExceptionEnum.QUESTION_NOT_FOUND.getMessage());
+        }
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDto questionDto = new QuestionDto();
         BeanUtils.copyProperties(question, questionDto);
