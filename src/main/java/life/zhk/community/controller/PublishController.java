@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,28 +21,29 @@ public class PublishController {
     private QuestionService questionService;
 
     @GetMapping("/publish")
-    public String publish(@RequestParam(name = "title") String title,
+    public ModelAndView  publish(@RequestParam(name = "title") String title,
                           @RequestParam(name = "description") String description,
                           @RequestParam(name = "tag") String tag,
-                          @RequestParam(name = "id") Integer id,
-                          HttpServletRequest request,
+                          @RequestParam(name = "id" ,required = false) Integer id,
+                          HttpServletRequest request,RedirectAttributes redirectAttributes,
                           Model model
     ) {
-        model.addAttribute("title", title);
-        model.addAttribute("description", description);
-        model.addAttribute("tag", tag);
-        if ("".equals(title) || title == null) {
-            model.addAttribute("error", "标题不能为空");
-            return "publish";
-        }
-        if ("".equals(description) || description == null) {
-            model.addAttribute("error", "描述不能为空");
-            return "publish";
-        }
-        if ("".equals(tag) || tag == null) {
-            model.addAttribute("error", "标签不能为空");
-            return "publish";
-        }
+
+//        model.addAttribute("title", title);
+//        model.addAttribute("description", description);
+//        model.addAttribute("tag", tag);
+//        if ("".equals(title) || title == null) {
+//            model.addAttribute("error", "标题不能为空");
+//            return "/publish";
+//        }
+//        if ("".equals(description) || description == null) {
+//            model.addAttribute("error", "描述不能为空");
+//            return "/publish";
+//        }
+//        if ("".equals(tag) || tag == null) {
+//            model.addAttribute("error", "标签不能为空");
+//            return "/publish";
+//        }
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
@@ -50,7 +53,10 @@ public class PublishController {
         question.setCreator(user.getId());
         //questionMapper.createPublish(question);
         questionService.createdOrUpdateQuestion(question);
-        return "redirect:/index";
+        ModelAndView modelAndView=new ModelAndView("redirect:/");
+        model.addAttribute("msg","问题提交成功");
+
+        return modelAndView;
     }
 
     @GetMapping("/publish/{id}")

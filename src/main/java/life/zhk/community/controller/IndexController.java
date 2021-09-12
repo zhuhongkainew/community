@@ -21,7 +21,7 @@ public class IndexController {
     private QuestionService questionService;
 
 
-    @GetMapping("/index")
+    @GetMapping("/")
     public String hello(@RequestParam(name = "page", defaultValue = "1") Integer page,
                         Model model) {
         Integer size =5;
@@ -35,7 +35,7 @@ public class IndexController {
         return "radio";
     }
 
-    @GetMapping("/")
+    @GetMapping("/goLogin")
     public String login() {
         return "login";
     }

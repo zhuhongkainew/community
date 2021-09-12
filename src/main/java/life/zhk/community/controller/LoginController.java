@@ -16,12 +16,12 @@ public class LoginController {
     @Autowired
     private UserMapper userMapper;
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+//    @GetMapping("/goLogin")
+//    public String login() {
+//        return "login";
+//    }
 
-    @GetMapping("/sign")
+    @GetMapping("/login")
     public String sign(@RequestParam(name = "email") String id,
                        @RequestParam(name = "password") String name,
                        HttpServletRequest request,
@@ -33,9 +33,9 @@ public class LoginController {
 
         if (user != null) {
             response.addCookie(new Cookie("token", user.getToken()));
-            return "redirect:/index";
-        } else {
             return "redirect:/";
+        } else {
+            return "redirect:/login";
         }
 
     }

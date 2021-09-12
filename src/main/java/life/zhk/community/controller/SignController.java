@@ -9,4 +9,9 @@ public class SignController {
     public String goSign() {
         return "sign";
     }
+
+    @GetMapping("/sign1")
+    public String sign() {
+        return "login";
+    }
 }
