@@ -3,6 +3,12 @@ package life.zhk.community.exception;
 public class CustomizeException extends RuntimeException{
     private String message;
     private Integer code;
+
+    public CustomizeException(ExceptionEnum exceptionEnum) {
+        this.message=exceptionEnum.getMessage();
+        this.code=exceptionEnum.getCode();
+    }
+
     @Override
     public String getMessage() {
         return message;
@@ -11,8 +17,5 @@ public class CustomizeException extends RuntimeException{
     public Integer getCode() {
         return code;
     }
-    public CustomizeException(Integer code, String message) {
-        this.message=message;
-        this.code=code;
-    }
+
 }

@@ -4,6 +4,7 @@ import life.zhk.community.dto.PaginationDto;
 import life.zhk.community.dto.QuestionDto;
 import life.zhk.community.exception.CustomizeException;
 import life.zhk.community.exception.ExceptionEnum;
+import life.zhk.community.mapper.QuestionEXMapper;
 import life.zhk.community.mapper.QuestionMapper;
 import life.zhk.community.mapper.UserMapper;
 import life.zhk.community.model.Question;
@@ -23,6 +24,8 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionEXMapper questionEXMapper;
 
     public PaginationDto getPaginationList(Integer page, Integer size) {
         PaginationDto paginationDto = new PaginationDto();
@@ -101,7 +104,7 @@ public class QuestionService {
     public QuestionDto getQuestionById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question==null){
-          throw new CustomizeException(ExceptionEnum.QUESTION_NOT_FOUND.getCode(),ExceptionEnum.QUESTION_NOT_FOUND.getMessage());
+          throw new CustomizeException(ExceptionEnum.QUESTION_NOT_FOUND);
         }
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDto questionDto = new QuestionDto();
@@ -129,5 +132,12 @@ public class QuestionService {
             example.createCriteria().andIdEqualTo(question.getId());
             questionMapper.updateByExampleSelective(questionUpdate, example);
         }
+    }
+
+    public void incView(Integer id) {
+        Question question=new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionEXMapper.incView(question);
     }
 }

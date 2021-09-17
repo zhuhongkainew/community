@@ -18,8 +18,9 @@ public class questionController {
     public String questById(@PathVariable(name="id") Integer id, Model model){
     QuestionDto questionDto =questionService.getQuestionById(id);
     if(questionDto==null){
-       throw new CustomizeException(ExceptionEnum.QUESTION_NOT_FOUND.getCode(),ExceptionEnum.QUESTION_NOT_FOUND.getMessage());
+       throw new CustomizeException(ExceptionEnum.QUESTION_NOT_FOUND);
     }
+    questionService.incView(id);
     model.addAttribute("question",questionDto);
         return "question";
     }
