@@ -1,7 +1,8 @@
 package life.zhk.community.exception;
 
 public enum ExceptionEnum {
-    QUESTION_NOT_FOUND(1,"问题不存在，请检查")
+    QUESTION_NOT_FOUND(1,"问题不存在，请检查"),
+    USER_NO_LOGIN(4001,"用户未登录，请登录后重试"),
     ;
 
     private Integer code;
