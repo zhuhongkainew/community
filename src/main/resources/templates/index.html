@@ -11,18 +11,13 @@
     //     alert(decodeURIComponent(mes));
     // }
     $(document).ready(function(){
-        //alert("sssss");
-        // var msg = document.getElementById("msg");
-        // var message = msg.text;
-        var message2=$("#msg").html();
-
-        if(message2!=null&&message2!='') {
-            alert(message2);
+        var closeFlag =window.localStorage.getItem("close");
+        if(closeFlag=="true"){
+            window.close();
+            window.localStorage.removeItem("close");
         }
 
     })
-
-
 </script>
 <head>
     <title>胖恺社区</title>

@@ -94,6 +94,12 @@
             success: function (result) {
                 alert(result.message);
                 $("#comment_selection").hide();
+                if(result.code=='4001'){
+                 // location.href="http://localhost:8080/goLogin";
+                  window.open("http://localhost:8080/goLogin");
+                    localStorage.setItem("close", "true");
+                }
+
             },
             error: function (result) {
 
