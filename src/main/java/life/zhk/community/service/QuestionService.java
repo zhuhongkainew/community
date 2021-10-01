@@ -10,6 +10,7 @@ import life.zhk.community.mapper.UserMapper;
 import life.zhk.community.model.Question;
 import life.zhk.community.model.QuestionExample;
 import life.zhk.community.model.User;
+import life.zhk.community.model.UserExample;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -50,14 +53,25 @@ public class QuestionService {
 
         QuestionExample example = new QuestionExample();
         List<Question> questionList = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
-        List<QuestionDto> questionDtoList = new ArrayList<>();
-        for (Question question : questionList) {
+       // List<QuestionDto> questionDtoList = new ArrayList<>();
+//        for (Question question : questionList) {
+//            QuestionDto questionDto = new QuestionDto();
+//            BeanUtils.copyProperties(question, questionDto);
+//            User user = userMapper.selectByPrimaryKey(question.getCreator());
+//            questionDto.setUser(user);
+//            questionDtoList.add(questionDto);
+//        }
+        List<Integer> userIdList = questionList.stream().map(question -> question.getCreator()).distinct().collect(Collectors.toList());
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andIdIn(userIdList);
+        List<User> userList = userMapper.selectByExample(userExample);
+        Map<Integer, User> userMap = userList.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+        List<QuestionDto> questionDtoList = questionList.stream().map(question -> {
             QuestionDto questionDto = new QuestionDto();
             BeanUtils.copyProperties(question, questionDto);
-            User user = userMapper.selectByPrimaryKey(question.getCreator());
-            questionDto.setUser(user);
-            questionDtoList.add(questionDto);
-        }
+            questionDto.setUser(userMap.get(questionDto.getCreator()));
+            return questionDto;
+        }).collect(Collectors.toList());
         paginationDto.setQuestionDtoList(questionDtoList);
         return paginationDto;
     }
