@@ -52,11 +52,14 @@ public class CommentService {
         commentExample.createCriteria().andParentIdEqualTo(id).andTypeEqualTo(type);
         commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
+        //Lambda将comment转换为评论用户id集合
         List<Integer> collect = comments.stream().map(c -> c.getCommentatorId()).distinct().collect(Collectors.toList());
         UserExample userExample = new UserExample();
         userExample.createCriteria().andIdIn(collect);
         List<User> userList =userMapper.selectByExample(userExample);
+        //根据id查到的用户集合用lambda表达式转换为map方便后续获取
         Map<Integer, User> userMap = userList.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+        //用Lambda表达式将commentList转换为commentDto,同时去上面User转换的map里获取user信息，赋值到commentDto
         List<CommentDto> CommentDto1 = comments.stream().map(comment -> {
             CommentDto commentDto = new CommentDto();
             BeanUtils.copyProperties(comment, commentDto);
