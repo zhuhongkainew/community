@@ -17,4 +17,8 @@ public enum CommentTypeEnum {
         }
         return false;
     }
+
+    public Integer getType() {
+        return type;
+    }
 }

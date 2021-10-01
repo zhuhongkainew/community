@@ -1,5 +1,6 @@
 package life.zhk.community.dto;
 
+import life.zhk.community.exception.CustomizeException;
 import life.zhk.community.exception.ExceptionEnum;
 import lombok.Data;
 
@@ -15,7 +16,11 @@ public class ResultDto {
         return resultDto;
     }
 
-    public static Object errorOf(ExceptionEnum exceptionEnum) {
+    public static ResultDto errorOf(ExceptionEnum exceptionEnum) {
         return errorOf(exceptionEnum.getCode(),exceptionEnum.getMessage());
+    }
+
+    public static ResultDto errorOf(CustomizeException ex) {
+        return  errorOf(ex.getCode(),ex.getMessage());
     }
 }
