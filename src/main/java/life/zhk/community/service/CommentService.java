@@ -4,16 +4,14 @@ import life.zhk.community.dto.CommentDto;
 import life.zhk.community.enums.CommentTypeEnum;
 import life.zhk.community.exception.CustomizeException;
 import life.zhk.community.exception.ExceptionEnum;
-import life.zhk.community.mapper.CommentMapper;
-import life.zhk.community.mapper.QuestionEXMapper;
-import life.zhk.community.mapper.QuestionMapper;
-import life.zhk.community.mapper.UserMapper;
+import life.zhk.community.mapper.*;
 import life.zhk.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,6 +26,8 @@ public class CommentService {
     private QuestionEXMapper questionEXMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CommentEXMapper commentEXMapper;
 
     @Transactional
     public void createComment(Comment comment) {
@@ -43,6 +43,13 @@ public class CommentService {
             questionEXMapper.incComment(question);
         } else {
             //回复评论-二级评论
+            commentMapper.insert(comment);
+            //增加评论次数
+            Comment commentParent = new Comment();
+            commentParent.setId(comment.getParentId().longValue());
+            commentParent.setCommentCount(1L);
+            commentEXMapper.incComment(commentParent);
+
         }
 
     }
@@ -53,6 +60,10 @@ public class CommentService {
         commentExample.createCriteria().andParentIdEqualTo(id).andTypeEqualTo(type.getType());
         commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
+
+        if (comments.size() == 0) {
+            return new ArrayList<>();
+        }
         //Lambda将comment转换为评论用户id集合
         List<Integer> collect = comments.stream().map(c -> c.getCommentatorId()).distinct().collect(Collectors.toList());
         UserExample userExample = new UserExample();
