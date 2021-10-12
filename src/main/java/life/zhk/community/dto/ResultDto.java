@@ -23,4 +23,8 @@ public class ResultDto {
     public static ResultDto errorOf(CustomizeException ex) {
         return  errorOf(ex.getCode(),ex.getMessage());
     }
+
+    public static Object isOk(int i, String ddd) {
+        return errorOf(i,ddd);
+    }
 }

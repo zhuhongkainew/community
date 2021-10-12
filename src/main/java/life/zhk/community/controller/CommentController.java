@@ -1,6 +1,7 @@
 package life.zhk.community.controller;
 
 import life.zhk.community.dto.CommentCreateDto;
+import life.zhk.community.dto.CommentDto;
 import life.zhk.community.dto.ResultDto;
 import life.zhk.community.enums.CommentTypeEnum;
 import life.zhk.community.exception.ExceptionEnum;
@@ -9,11 +10,11 @@ import life.zhk.community.model.User;
 import life.zhk.community.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class CommentController {
@@ -29,7 +30,7 @@ private CommentService commentService;
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(comment.getGmtCreate());
         comment.setLikeCount(0L);
-
+        comment.setCommentCount(0L);
         comment.setType(commentCreateDto.getType());
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
@@ -45,5 +46,11 @@ private CommentService commentService;
       //  commentMapper.insert(comment);
         commentService.createComment(comment);
         return ResultDto.errorOf(200,"回复成功");
+    }
+    @GetMapping("/comment/{id}")
+    public Object getCommentList(@PathVariable(name="id") int id){
+        List<CommentDto> commentDtoList =new ArrayList<CommentDto>();
+        commentDtoList =commentService.getCommentByParentId(id,CommentTypeEnum.COMMENT);
+        return ResultDto.isOk(1,"ddd") ;
     }
 }

@@ -28,7 +28,7 @@ public class questionController {
         if (questionDto == null) {
             throw new CustomizeException(ExceptionEnum.QUESTION_NOT_FOUND);
         }
-        List<CommentDto> commentDto =commentService.getCommentByParentId(id, CommentTypeEnum.QUESTION.getType());
+        List<CommentDto> commentDto =commentService.getCommentByParentId(id, CommentTypeEnum.QUESTION);
 
         questionService.incView(id);
         model.addAttribute("question", questionDto);
