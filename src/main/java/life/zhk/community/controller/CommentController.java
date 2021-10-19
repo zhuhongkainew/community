@@ -49,8 +49,7 @@ private CommentService commentService;
     }
     @GetMapping("/comment/{id}")
     public Object getCommentList(@PathVariable(name="id") int id){
-        List<CommentDto> commentDtoList =new ArrayList<CommentDto>();
-        commentDtoList =commentService.getCommentByParentId(id,CommentTypeEnum.COMMENT);
-        return ResultDto.isOk(1,"ddd") ;
+        List<CommentDto> commentDtoList =commentService.getCommentByParentId(id,CommentTypeEnum.COMMENT);
+        return ResultDto.okOf(commentDtoList);
     }
 }
