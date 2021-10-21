@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class QuestionService {
         Integer totalCount;
         Integer totalPage;
         totalCount = (int) questionMapper.countByExample(new QuestionExample());
-        if (totalCount / size == 0) {
+        if (totalCount % size == 0) {
             totalPage = totalCount / size;
 
         } else {
@@ -52,6 +53,7 @@ public class QuestionService {
         //List<Question> questionList = questionMapper.getQuestList(offset, size);
 
         QuestionExample example = new QuestionExample();
+        example.setOrderByClause("gmt_Create desc");
         List<Question> questionList = questionMapper.selectByExampleWithRowbounds(example, new RowBounds(offset, size));
        // List<QuestionDto> questionDtoList = new ArrayList<>();
 //        for (Question question : questionList) {
@@ -153,5 +155,15 @@ public class QuestionService {
         question.setId(id);
         question.setViewCount(1);
         questionEXMapper.incView(question);
+    }
+
+    public List<Question> getRelationQuestion(QuestionDto questionDto) {
+        String[] tags = questionDto.getTag().split(",");
+        String tag = Arrays.asList(tags).stream().collect(Collectors.joining("|"));
+        Question question =new Question();
+        question.setId(questionDto.getId());
+        question.setTag(tag);
+        List<Question> questionList =questionEXMapper.selectRelation(question);
+        return questionList;
     }
 }
