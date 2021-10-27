@@ -12,30 +12,57 @@
 </head>
 <body style="background-color: #efefef">
 <div th:insert="~{navigation :: nav}"></div>
-<div class="container-fluid" style="margin: 30px;background-color: white" >
+<div class="container-fluid" style="margin: 30px;background-color: white">
     <div class="row" style="background-color: white">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-sm-12" >
+        <div class="col-lg-9 col-md-12 col-sm-12 col-sm-12">
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发起</h2>
             <hr>
-            <form action="/publish">
+            <form action="/publish"  method="post">
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group" style="background-color: white">
                     <label for="title">问题标题（简单扼要）:</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="问题标题……" th:value="${title}">
+                    <input type="text" class="form-control" id="title" name="title" placeholder="问题标题……"
+                           th:value="${title}">
                 </div>
                 <div class="form-group" style="background-color: white">
                     <label for="description">问题补充 (必填，请参照右侧提示):</label>
-                    <textarea  name="description" id="description" cols="30" class="form-control" rows="10" th:text="${description}"></textarea>
+                    <textarea name="description" id="description" cols="30" class="form-control" rows="10"
+                              th:text="${description}"></textarea>
                 </div>
                 <div class="form-group" style="background-color: white">
                     <label for="tag">添加标签:</label>
-                    <input type="text" class="form-control" id="tag" name="tag" placeholder="添加标签不超过用逗号隔开，每个标签不超过10个字" th:value="${tag}">
+                    <input type="text" class="form-control" id="tag" name="tag" autocomplete="off"
+                           placeholder="添加标签不超过用逗号隔开，每个标签不超过10个字" th:value="${tag}"
+                           onclick="showTagList()"
+                    >
                 </div>
+                <div id="tagList" style="display: none;padding-top: 10px;margin-top: 10px">
+
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" th:each="ctag :${tags}">
+                            <a th:href="${'#'+ctag.getTagName}" aria-controls="home" role="tab" data-toggle="tab"
+                               th:text="${ctag.getTagName}"></a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane " th:id="${ctag.getTagName}" th:each="ctag :${tags}"
+                             style="padding: 10px 10px">
+                             <span class="label label-info" th:each="tags:${ctag.getTags}"
+                                   style="font-size: 12px; white-space: normal;display: inline-block ;  margin: 5px 5px;">
+                                 <span class="label label-info" th:text="${tags}" onclick="selectTag(this)"
+                                       th:data-tag="${tags}">
+                            </span>
+                             </span>
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error} != null"></div>
                 <button type="submit" class="btn btn-success" style="background-color: white">发布</button>
             </form>
         </div>
-        <div class="col-lg-3 col-md-12 col-sm-12 col-sm-12" >
+        <div class="col-lg-3 col-md-12 col-sm-12 col-sm-12">
             <h3>问题发起指南</h3>
             • 问题标题: 请用精简的语言描述您发布的问题，不超过25字 <br>
             • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>
@@ -44,4 +71,50 @@
     </div>
 </div>
 </body>
+<script type="text/javascript" charset="UTF-8">
+    function showTagList() {
+        $("#tagList").show();
+    }
+
+    function selectTag(e) {
+        // var tag = e.getAttribute("data-tag");
+        // alert(tag);
+        // var preValue = $("#tag").val();
+        //
+        // if (preValue.indexOf(tag) == -1) {
+        //     if (preValue) {
+        //         $("#tag").val(preValue + "," + tag);
+        //     } else {
+        //         $("#tag").val(tag);
+        //     }
+        // }
+        var value = e.getAttribute("data-tag");
+        var previous = $("#tag").val();
+
+        if (previous) {
+            var index = 0;
+            var appear = false; //记录value是否已经作为一个独立的标签出现过
+            while (true) {
+                index = previous.indexOf(value, index); //value字符串在previous中出现的位置
+                if (index == -1) break;
+                //判断previous中出现的value是否是另一个标签的一部分
+                //即value的前一个和后一个字符都是逗号","或者没有字符时，才说明value是一个独立的标签
+                if ((index == 0 || previous.charAt(index - 1) == ",")
+                    && (index + value.length == previous.length || previous.charAt(index + value.length) == ",")
+                ) {
+                    appear = true;
+                    break;
+                }
+                index++; //用于搜索下一个出现位置
+            }
+            if (!appear) {
+                //若value没有作为一个独立的标签出现过
+                $("#tag").val(previous + ',' + value);
+            }
+        }
+        else {
+            $("#tag").val(value);
+        }
+    }
+</script>
 </html>

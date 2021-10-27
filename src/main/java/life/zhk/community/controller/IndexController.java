@@ -1,5 +1,6 @@
 package life.zhk.community.controller;
 
+import life.zhk.community.cache.TagCache;
 import life.zhk.community.dto.PaginationDto;
 import life.zhk.community.mapper.UserMapper;
 import life.zhk.community.service.QuestionService;
@@ -41,7 +42,8 @@ public class IndexController {
     }
 
     @GetMapping("/gopublish")
-    public String goPublish() {
+    public String goPublish(Model model) {
+        model.addAttribute("tags", TagCache.getTag());
         return "publish";
     }
 
