@@ -74,7 +74,7 @@ public class QuestionService {
             questionDto.setUser(userMap.get(questionDto.getCreator()));
             return questionDto;
         }).collect(Collectors.toList());
-        paginationDto.setQuestionDtoList(questionDtoList);
+        paginationDto.setData(questionDtoList);
         return paginationDto;
     }
 
@@ -113,7 +113,7 @@ public class QuestionService {
             questionDto.setUser(user);
             questionDtoList.add(questionDto);
         }
-        paginationDto.setQuestionDtoList(questionDtoList);
+        paginationDto.setData(questionDtoList);
         return paginationDto;
     }
 

@@ -33,6 +33,11 @@ public class profileController {
             model.addAttribute("sectionName", "我的提问");
         }
 
+        if("replies".equals(action)){
+            model.addAttribute("section", "reply");
+            model.addAttribute("sectionName", "我的回复");
+        }
+
         PaginationDto paginationDto =questionService.getPaginationListByUserId(user.getId(),page,size);
         model.addAttribute("pagination", paginationDto);
         return "profile";

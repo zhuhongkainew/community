@@ -32,7 +32,7 @@
 
     <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 问题列表</h2>
     <hr>
-    <div class="media"  th:each="question :${pagination.questionDtoList}">
+    <div class="media"  th:each="question :${pagination.getData}">
         <div class="media-left">
             <a href="#">
                 <img class="media-object img-rounded" src="https://img-blog.csdnimg.cn/20201014180756754.png?x-oss-process=image/resize,m_fixed,h_64,w_64" >

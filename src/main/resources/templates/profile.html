@@ -19,7 +19,7 @@
 
             <h2> <span th:text="${sectionName}"></span></h2>
             <hr>
-            <div class="media"  th:each="question :${pagination.questionDtoList}">
+            <div class="media" th:each="question :${pagination.getData}" th:if="${section}=='question'">
                 <div class="media-left">
                     <a href="#">
                         <img class="media-object img-rounded" src="https://img-blog.csdnimg.cn/20201014180756754.png?x-oss-process=image/resize,m_fixed,h_64,w_64" >
@@ -32,6 +32,9 @@
                             th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span></span>
                 </div>
 
+            </div>
+            <div class="media" th:each="question :${pagination.getData}" th:if="${section}=='reply'">
+                <p>我的回复</p>
             </div>
             <nav aria-label="Page navigation">
                 <ul class="pagination">
@@ -74,7 +77,7 @@
                     <a href="/profile/question"
                        th:class="${section == 'question'}? 'active list-group-item' : 'list-group-item'">我的问题</a>
                     <a href="/profile/replies"
-                       th:class="${section == 'replies'}? 'active list-group-item' : 'list-group-item'">
+                       th:class="${section == 'reply'}? 'active list-group-item' : 'list-group-item'">
                         最新回复
                         <span class="badge" th:text="${session.unreadCount}"></span>
                     </a>
