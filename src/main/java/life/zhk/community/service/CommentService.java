@@ -28,6 +28,8 @@ public class CommentService {
     private UserMapper userMapper;
     @Autowired
     private CommentEXMapper commentEXMapper;
+    @Autowired
+    private NotificationMapper notificationMapper;
 
     @Transactional
     public void createComment(Comment comment) {
@@ -41,19 +43,31 @@ public class CommentService {
             commentMapper.insert(comment);
             question.setCommentCount(1);
             questionEXMapper.incComment(question);
+            createNotification(question.getId(),comment);
         } else {
             //回复评论-二级评论
             commentMapper.insert(comment);
+            Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
+            if (question == null) {
+                throw new CustomizeException(ExceptionEnum.QUESTION_NOT_FOUND);
+            }
             //增加评论次数
             Comment commentParent = new Comment();
             commentParent.setId(comment.getParentId().longValue());
             commentParent.setCommentCount(1L);
             commentEXMapper.incComment(commentParent);
+            createNotification(question.getId(),comment);
 
         }
 
     }
-
+    public  void  createNotification(int outId,Comment comment){
+        Notification notification =new Notification();
+        notification.setMakeDate(System.currentTimeMillis());
+        notification.setQuestionId(outId);
+        notification.setReceiver(comment);
+        notificationMapper.insert(notification);
+    }
     public List<CommentDto> getCommentByParentId(Integer id, CommentTypeEnum type) {
 
         CommentExample commentExample = new CommentExample();
