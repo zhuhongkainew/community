@@ -44,7 +44,7 @@ private CommentService commentService;
         }
         comment.setCommentatorId(user.getId());
       //  commentMapper.insert(comment);
-        commentService.createComment(comment);
+        commentService.createComment(comment,user.getName());
         return ResultDto.errorOf(200,"回复成功");
     }
     @GetMapping("/comment/{id}")

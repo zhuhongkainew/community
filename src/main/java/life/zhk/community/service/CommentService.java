@@ -2,6 +2,10 @@ package life.zhk.community.service;
 
 import life.zhk.community.dto.CommentDto;
 import life.zhk.community.enums.CommentTypeEnum;
+import life.zhk.community.enums.NotificationEnum;
+
+
+import life.zhk.community.enums.NotificationStatusEnum;
 import life.zhk.community.exception.CustomizeException;
 import life.zhk.community.exception.ExceptionEnum;
 import life.zhk.community.mapper.*;
@@ -32,7 +36,7 @@ public class CommentService {
     private NotificationMapper notificationMapper;
 
     @Transactional
-    public void createComment(Comment comment) {
+    public void createComment(Comment comment, String name) {
 
         if (comment.getType() == CommentTypeEnum.QUESTION.getType()) {
             //回复问题
@@ -43,29 +47,40 @@ public class CommentService {
             commentMapper.insert(comment);
             question.setCommentCount(1);
             questionEXMapper.incComment(question);
-            createNotification(question.getId(),comment);
+            createNotification(question.getId(),name,question.getTitle(),comment.getCommentatorId(),question.getCreator(),NotificationEnum.NOTIFICATION_QUESTION);
         } else {
             //回复评论-二级评论
-            commentMapper.insert(comment);
-            Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
+            Comment parentComment =commentMapper.selectByPrimaryKey((long)comment.getParentId());
+            if (parentComment == null) {
+                throw new CustomizeException(ExceptionEnum.COMMENT_NOT_FOUND);
+            }
+            Question question = questionMapper.selectByPrimaryKey(parentComment.getParentId());
             if (question == null) {
                 throw new CustomizeException(ExceptionEnum.QUESTION_NOT_FOUND);
             }
+            commentMapper.insert(comment);
             //增加评论次数
             Comment commentParent = new Comment();
             commentParent.setId(comment.getParentId().longValue());
             commentParent.setCommentCount(1L);
             commentEXMapper.incComment(commentParent);
-            createNotification(question.getId(),comment);
+
+            createNotification(question.getId(),name,question.getTitle(),comment.getCommentatorId(),parentComment.getCommentatorId(), NotificationEnum.NOTIFICATION_COMMENT);
 
         }
 
     }
-    public  void  createNotification(int outId,Comment comment){
+    public  void  createNotification(int outId, String name, String title, Integer commentatorId, Integer receivedId, NotificationEnum notificationQuestion){
         Notification notification =new Notification();
         notification.setMakeDate(System.currentTimeMillis());
         notification.setQuestionId(outId);
-        notification.setReceiver(comment);
+        notification.setReceiver(receivedId);
+        notification.setSender(commentatorId);
+        notification.setSendName(name);
+        notification.setTitleName(title);
+        notification.setType(notificationQuestion.getType());
+        notification.setTypeName(notificationQuestion.getName());
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
         notificationMapper.insert(notification);
     }
     public List<CommentDto> getCommentByParentId(Integer id, CommentTypeEnum type) {

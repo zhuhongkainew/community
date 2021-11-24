@@ -33,8 +33,19 @@
                 </div>
 
             </div>
-            <div class="media" th:each="question :${pagination.getData}" th:if="${section}=='reply'">
-                <p>我的回复</p>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'reply'}">
+
+                <div class="media" th:each="notification : ${pagination.getData}">
+                    <div class="media-body">
+                        <p class="media-heading">
+                            <span th:text="${notification.sendName +' ' + notification.typeName + ' '}"></span>
+                            <a th:href="@{'/notification/'+ ${notification.id}}"
+                               th:text="${notification.titleName}">
+                            </a>
+                            <span class="label label-danger" th:if="${notification.status == 0}">未读</span>
+                        </p>
+                    </div>
+                </div>
             </div>
             <nav aria-label="Page navigation">
                 <ul class="pagination">

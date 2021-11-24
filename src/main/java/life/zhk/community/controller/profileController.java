@@ -2,6 +2,7 @@ package life.zhk.community.controller;
 
 import life.zhk.community.dto.PaginationDto;
 import life.zhk.community.model.User;
+import life.zhk.community.service.NotificationService;
 import life.zhk.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 public class profileController {
     @Autowired
     private QuestionService questionService;
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name = "action") String action,
@@ -31,15 +34,19 @@ public class profileController {
         if("question".equals(action)){
             model.addAttribute("section", "question");
             model.addAttribute("sectionName", "我的提问");
+            PaginationDto paginationDto =questionService.getPaginationListByUserId(user.getId(),page,size);
+            model.addAttribute("pagination", paginationDto);
         }
 
         if("replies".equals(action)){
             model.addAttribute("section", "reply");
             model.addAttribute("sectionName", "我的回复");
+            PaginationDto paginationDto =notificationService.getPaginationListByUserId(user.getId(),page,size);
+            model.addAttribute("pagination", paginationDto);
+
         }
 
-        PaginationDto paginationDto =questionService.getPaginationListByUserId(user.getId(),page,size);
-        model.addAttribute("pagination", paginationDto);
+
         return "profile";
     }
 }
