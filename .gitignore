@@ -13,13 +13,13 @@ logs/
 .settings
 .springBeans
 .sts4-cache
-.bak
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
+*.bak
 
 ### NetBeans ###
 /nbproject/private/
